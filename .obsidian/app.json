@@ -1,0 +1,14 @@
+{
+  "legacyEditor": false,
+  "livePreview": false,
+  "newFileLocation": "root",
+  "promptDelete": false,
+  "attachmentFolderPath": "Media",
+  "pdfExportSettings": {
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 75
+  },
+  "alwaysUpdateLinks": true
+}

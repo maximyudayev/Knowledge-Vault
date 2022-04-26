@@ -1,0 +1,152 @@
+{
+  "main": {
+    "id": "03b1efac6de0d058",
+    "type": "split",
+    "children": [
+      {
+        "id": "f9cc5cd727f958c3",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Summary/Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition.md",
+            "mode": "source",
+            "source": true
+          }
+        },
+        "group": "0c5da32f67aecb6a"
+      },
+      {
+        "id": "c71e1882dd8c4753",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Summary/Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition.md",
+            "mode": "preview",
+            "source": true
+          }
+        },
+        "group": "0c5da32f67aecb6a"
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "ba6bf00765a829bd",
+    "type": "split",
+    "children": [
+      {
+        "id": "8677f43dd7ac2680",
+        "type": "tabs",
+        "dimension": 40.17094017094017,
+        "children": [
+          {
+            "id": "6d998ae11bd967ef",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "graph",
+              "state": {},
+              "pinned": true
+            }
+          }
+        ]
+      },
+      {
+        "id": "7e35f4b53bf60931",
+        "type": "tabs",
+        "dimension": 59.82905982905984,
+        "children": [
+          {
+            "id": "e2746cea647f3d45",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "a9374e6bc8bb5b50",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "reinforce",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 414.5
+  },
+  "right": {
+    "id": "d9b173ff5db2fc65",
+    "type": "split",
+    "children": [
+      {
+        "id": "afc104ba8c7008b4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a30e9fc3ef95acda",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Summary/Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "f9de59c22a3e8547",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c4ba6883fc9a9b84",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "f9cc5cd727f958c3",
+  "lastOpenFiles": [
+    "Summary/Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition.md",
+    "Summary/Skeleton-Based Action Segmentation with Multi-Stage Spatial-Temporal Graph Convolutional Neural Networks.md",
+    "Summary/Everything is Connected - Deep Learning on Graphs.md",
+    "Notes/PhD Meeting Notes 26.04.2022.md",
+    "Summary/Semi-Supervised Classification with Graph Convolutional Networks.md",
+    "Summary/The Lean Startup - Eric Ries.md",
+    "MOC/Books.md",
+    "MOC/Projects.md",
+    "MOC/Index.md",
+    "Notes/Help Ukraine.md"
+  ]
+}

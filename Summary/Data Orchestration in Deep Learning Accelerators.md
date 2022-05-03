@@ -1,6 +1,6 @@
 Created: 04-04-2022 10:27
-Status: #summary 
-Tags: [[AI Accelerators]]
+Status: #summary #todo
+Tags: [[AI Accelerators]] [[Books]]
 
 ## Bookmark: 3.4
 # Data Orchestration in Deep Learning Accelerators

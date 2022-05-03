@@ -1,5 +1,5 @@
 Created: 26-04-2022 12:08
-Status: #summary 
+Status: #summary #done
 Tags: [[mlcon 2.0]] [[Machine Learning]] [[Conferences]]
 
 # Everything is Connected - Deep Learning on Graphs

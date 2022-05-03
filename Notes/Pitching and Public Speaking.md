@@ -1,6 +1,6 @@
 Created: 20-04-2022 10:50
 Status: #note 
-Tags: [[Courses]]
+Tags: [[Courses]] [[Pitch]]
 
 # Pitching and Public Speaking
 ## Day 1

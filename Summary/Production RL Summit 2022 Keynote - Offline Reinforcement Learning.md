@@ -1,5 +1,5 @@
 Created: 24-04-2022 13:35
-Status: #summary 
+Status: #summary #done
 Tags: [[Reinforcement Learning]] [[Production RL Summit 2022]] [[Sergey Levine]]
 
 # Production RL Summit 2022 Keynote - Offline Reinforcement Learning

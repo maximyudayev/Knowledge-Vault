@@ -1,5 +1,5 @@
 Created: 15-04-2022 10:52
-Status: #insight #todo
+Status: #insight #done
 Tags: [[Machine Learning]]
 
 # Temporal Convolutional Network
@@ -23,7 +23,7 @@ The former is often used with multiple stages and for learning more complex temp
 To prevent doing linear combination with 0 activations, falling outside of window $T$ for a given dilated convolution layer, the size of window $T$ must be selected large and proportionate to the depth of the TCN stage.
 $T=1+(k-1)\sum\limits_{i=0}^{n}2^{i}=2^{n+1}-1$, for causal and
 $T=1$, for acausal networks.
-$n$ - depth of the TCN block
+$n$ - depth of the TCN block.
 ## References
 1. [[Skeleton-Based Action Segmentation with Multi-Stage Spatial-Temporal Graph Convolutional Neural Networks]]
 2. [[MS-TCN Multi-Stage Temporal Convolutional Network for Action Segmentation]]

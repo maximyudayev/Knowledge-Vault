@@ -1,5 +1,5 @@
 Created: 17-04-2022 12:57
-Status: #summary #todo
+Status: #summary #done
 Tags: [[Graph Convolutional Network]] [[Machine Learning]] [[Action Segmentation]]
 
 # Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition
@@ -14,8 +14,8 @@ Tags: [[Graph Convolutional Network]] [[Machine Learning]] [[Action Segmentation
 - Stacking multiple GCN layers generates higher-level feature maps.
 - Spatial temporal graph is used to form a hierarchical representation of the skeleton sequences.
 - 9 GCN layers: 3 of 64 channels, 3 of 128 channels, and 3 of 256 channels. All with temporal kernel size of 9, a residual connection, and 0.5 dropout probability.
-- 4th and 7th temporal convolutional layers have stride of 2 for pooling.
-- Global pooling at the end is done to get 256 feature vector for the input sequence and fed through the SoftMax.
+  4th and 7th temporal convolutional layers have stride of 2 for pooling, and also have a $1\times 1$ 2D convolution in the residual connection to match the layer's output dimension.
+  Global pooling at the end is done to get 256 feature vector for the input sequence and fed through the SoftMax. ^4e9dea
 - Weight matrix in GCN is shared among nodes: varying node degrees are dealt with by appropriate normalization of the adjacency matrix.
 ## Skeleton Graph Construction
 Graph is comprised of a set of nodes $V=\{v_{ti}|t=1,...,T;i=1,...,N\}$, which are interconnected with a set of edges $E$, split across 2 subsets: $E_{S}=\{v_{ti}v_{tj}|(i,j)\in H\}$ - intra-frame skeleton connections, $E_{F}=\{v_{ti}v_{t+1)i}\}$ - inter-frame same joint connections. $E_{F}$ represents trajectory of a joint $i$ over time.
@@ -24,11 +24,25 @@ Graph nodes are connected within each frame according to the skeleton structure.
 ## Spatial Graph Convolutional Neural Network
 Sampling function $p$ spits out a node in the neighborhood of $v_{ti}$ that's a member of the set $B(v_{ti})=\{v_{tj}|d(v_{ti},v_{tj})\leq D\}$, where $d(v_{ti},v_{tj})$ is the shortests distance between 2 nodes and $D$ is set to 1 in this work.
 
-Weight function $w$ orders the weights according to the partitioning strategy of neighbor set $B(v_{ti})$ into $K$ subsets, with each of $K$ subsets having a label. $l_{ti}:B(v_{ti})\rightarrow\{0,...,K-1\}$ maps a node in a neighborhood to its subset label. The weight function is then $w(v_{ti},v_{tj})=w'(l_{ti}(v_{tj})): B(v_{ti})\rightarrow\Re^c$.
+Weight function $w$ orders the weights according to the partitioning strategy of neighbor set $B(v_{ti})$ into $K$ subsets, with each of $K$ subsets having a label. 
+
+$$l_{ti}:B(v_{ti})\rightarrow\{0,...,K-1\}$$  ^1210b3
+
+maps a node in a neighborhood to its subset label. The weight function is then $w(v_{ti},v_{tj})=w'(l_{ti}(v_{tj})): B(v_{ti})\rightarrow\Re^c$.
 
 The spatial graph convolution is then $f_{out}(v_{ti})=\sum\limits_{v_{tj}\in B(v_{ti})}\frac{1}{Z_{ti}(v_{tj})}f_{in}(p(v_{ti},v_{tj}))w(v_{ti},v_{tj})$, where $Z_{ti}(v_{tj})=|\{v_{tk}|l_{ti}(v_{tk})=l_{ti}(v_{tj})\}|$ is the cardinality of the subset that balances the contributions of different subsets to the output.
 ## Spatial Temporal Modeling
-Modeling spatial temporal dynamics in the sequence is extended from the spatial graph convolution by extending the concept of neighborhood, including now the temporally connected joints $B(v_{ti})=\{v_{qj}|d(v_{ti},v_{tj})\leq K; |q-t|\leq \lfloor\Gamma/2\rfloor\}$,  where $\Gamma$ is the temporal kernel size that controls the temporal range to be included in the neighborhood. $l_{ST}(v_{qj})=l_{ti}(v_{tj})+(q-t+\lfloor\Gamma/2\rfloor)\times K$ is the well-defined label mapping function for the spatial temporal graph convolution.
+Modeling spatial temporal dynamics in the sequence is extended from the spatial graph convolution by extending the concept of neighborhood, including now the temporally connected joints 
+
+$$B(v_{ti})=\{v_{qj}|d(v_{ti},v_{tj})\leq K; |q-t|\leq \lfloor\Gamma/2\rfloor\}$$ ^ce4b45
+
+where $\Gamma$ is the temporal kernel size that controls the temporal range to be included in the neighborhood. This is equivalent to a 3D tensor of $n\times\Gamma\times C$, where $n$ is the degree of the node $v_{i}$ (the number of neighbor nodes it is connected to).
+
+$$l_{ST}(v_{qj})=l_{ti}(v_{tj})+(q-t+\lfloor\Gamma/2\rfloor)\times K$$  ^d970a4
+
+is the well-defined label mapping function for the spatial temporal graph convolution.
+
+This mapping function is implicitly done by multiplication of the input tensor with the adjacency matrix.
 ## Partitioning Strategies
 Label mapping depends on the partitioning strategy.
 ### Uni-labeling
@@ -51,18 +65,18 @@ A more advanced partitioning scheme is expected to lead to better performance.
 Since a joint can be a member of multiple body parts, it needs to have different importance weightings in those body parts, with respect to the movement dynamics. A mask $M$ is added to each spatial temporal graph convolution layer to scale the contribution of a joint's feature on its neighbors based on the learned weighting of the spatial edges in $E_{S}$.
 ### Implementation
 Uni-labeling, single-frame ST-GCN can be implemented as:
-$\pmb{f}_{out}=\pmb{\Lambda}^{-\frac{1}{2}}(\pmb{A}+\pmb{I})\pmb{\Lambda}^{-\frac{1}{2}}\pmb{f}_{in}\pmb{W}$
+$\pmb{f}_{out}=\pmb{D}^{-\frac{1}{2}}(\pmb{A}+\pmb{I})\pmb{D}^{-\frac{1}{2}}\pmb{f}_{in}\pmb{W}$
 
 $\pmb{A}$ - adjacency matrix of intra-frame connections
 $\pmb{I}$ - identity matrix of intra-frame self-connections
 $\pmb{W}$ - weight matrix of stacked vectors of multiple output channels
 $\pmb{f}_{in}$ - $(C,V,T)$ size input tensor
-$\pmb{\Lambda}^{ii}=\sum\limits_{j}(A^{ij}+I^{ij})$ - degree matrix
+$\pmb{D}^{ii}=\sum\limits_{j}(A^{ij}+I^{ij})$ - diagonal node degree matrix (sum of all connections of a node), where for a undirectional graph the self-connection of a node is added as 2 to the degree value.
 
 Graph convolution is done by $1\times\Gamma$ 2D convolution and multiplication with the normalized adjacency matrix on the second dimension.
 
-For partitioning strategies other than uni-labeling, the adjacency matrix is dismantled as $\pmb{A}+\pmb{I}=\sum\limits_{j}\pmb{A}_{j}$, which yields $\pmb{f}_{out}=\sum\limits_{j}\pmb{\Lambda}_{j}^{-\frac{1}{2}}\pmb{A}_{j}\pmb{\Lambda}_{j}^{-\frac{1}{2}}\pmb{f}_{in}\pmb{W}_{j}$, where  $\pmb{\Lambda}_{j}^{ii}=\sum\limits_{k}(A_{j}^{ik}+\alpha)$ and $\alpha=0.001$ to avoid empty rows in $\pmb{A}_{j}$.
-$\pmb{\hat{A}} = \pmb{\Lambda}_{j}^{-\frac{1}{2}}\pmb{A}_{j}\pmb{\Lambda}_{j}^{-\frac{1}{2}}$ is a renormalized adjacency matrix. ~~(Why?)~~
+For partitioning strategies other than uni-labeling, the adjacency matrix is dismantled as $\pmb{A}+\pmb{I}=\sum\limits_{j}\pmb{A}_{j}$, which yields $\pmb{f}_{out}=\sum\limits_{j}\pmb{D}_{j}^{-\frac{1}{2}}\pmb{A}_{j}\pmb{D}_{j}^{-\frac{1}{2}}\pmb{f}_{in}\pmb{W}_{j}$, where  $\pmb{D}_{j}^{ii}=\sum\limits_{k}(A_{j}^{ik}+\alpha)$ and $\alpha=0.001$ to avoid empty rows in $\pmb{A}_{j}$.
+$\pmb{\hat{A}} = \pmb{D}_{j}^{-\frac{1}{2}}\pmb{A}_{j}\pmb{D}_{j}^{-\frac{1}{2}}$ is a renormalized adjacency matrix. ~~(Why?)~~
 
 Edge importance weighting is implemented as $\pmb{A}_{j}\otimes\pmb{M}_{j}$, an element-wise product of the subset's adjacency matrix with a learnable matrix $\pmb{M}_{j}$, unique to each subset's adjacency matrix and initialized as all-ones matrix.
 
@@ -70,7 +84,41 @@ Graph structure remains the same, only node features are updated. Each node's fe
 The GCN reuses the same weight matrix across all nodes in the layer, but the variability comes from the renormalized adjacency matrix and the mask matrix, which are designed to exploit intrinsic relationships between the nodes and the partition scheme, and the mapping function that reorders nodes to be multiplied with.
 
 Spatial partitioning shows the best results.
+### In-depth Operator Analysis
+#### Concept
+$\sum\limits_{j}\pmb{\hat{A}}_{j}\pmb{f}_{in}\pmb{W}_{j}$ can be thought of as, for each partition $j$, a $1\times 1$ 2D convolution of the input $\pmb{f}_{in}\in\Re^{N\times T\times C}$ with the weight matrix $\pmb{W}_{j}\in\Re^{1\times 1\times C\times C}$ to produce an intermediate buffer $\pmb{f}^{'}_{j}\in\Re^{N\times T\times C}$, where each slice of the tensor is reused $\Gamma$ times. 
 
+![[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition 1.png]]
+
+Window of size $\Gamma$ slides over time and selectively weights and accumulates the partial convolution results of the graph based on the masked normalized adjacency matrix $\pmb{\hat{A}}_{j}\in\Re^{N\times N}$ which spatially accumulates interconnected nodes across neighborhoods for each time step separately.
+However, in the same partition, each frame needs to be spatially combined based on the adjacency matrix only once since a frame's spatial accumulation is time-invariant: hence this step can be done on each incoming frame before pushing it into the corresponding $j$-th FIFO.
+
+![[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition 2.png]]
+
+The resulting $\pmb{f}^{''}_{j}\in\Re^{N\times\Gamma\times C}$ is then reduced by simply accumulating along $\Gamma$, the time dimension.
+
+![[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition 3.png]]
+
+The partial output matrix of partition $j$, $\pmb{f}^{'''}_{j}\in\Re^{N\times 1\times C}$, is then summed with the others to produce the final output $\pmb{f}_{out,t}\in\Re^{N\times 1\times C}$.
+$\pmb{f}_{out,t}$ is fed through [[Batch Normalization]]$\rightarrow$[[Dropout Layer]]$\rightarrow$[[Residual Connection]]$\rightarrow$[[ReLU]].
+The result is then pushed into the output FIFO of size $\Gamma$ to be consumed by the follow-up ST-GCN unit.
+
+![[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition 4.png]]
+#### Datapath Implication
+This means that each $N\times 1\times C$ input sample, fed in at the sampling frequency of the dataset or the capturing system, is 2D convolved with $\pmb{W}_{j}$ and pushed into the corresponding $j$-th FIFO. The last $\Gamma$ samples are then used to produce an output sample.
+
+For each partition, the 2D convolution of$\pmb{f}_{in}\in\Re^{N\times T\times C}$ with the weight matrix $\pmb{W}_{j}\in\Re^{1\times 1\times C\times C}$ is equivalent to doing a linear combination of features across every node and across all time stamps, separately. It produces partial accumulations/contributions of each node across space and time.
+
+The multiplication with the $N\times N$ adjacency matrix (can be already weighted by the mask matrix M) is equivalent to accumulating partial contributions of nodes across space and time of only those joints that are directly connected in the neighborhood.
+
+The final accumulation across the time axis (second dimension of size Gamma) produces the final output at time $t$ for the partition $j$ of size N x 1 x C, equivalent to summing together at time $t$, for each node, partial contributions of nodes in the neighborhood coming from $\lfloor\Gamma/2\rfloor$ former and $\lfloor\Gamma/2\rfloor$ future time frames.
+
+Lastly, the partial results of each partition $j$ are summed and pushed into the output FIFO, consumed by the next ST-GCN layer.
+
+Tadaa! No TCN needed, straight-forward implementation using standard differentiable tensor operators.
+
+The residual connections in ST-GCN layers 4 and 7 are fed through a $1\times 1$ 2D convolution to match the layer's output dimensions.
 ## References
 1. Yan, S., Xiong, Y., & Lin, D. (2018). Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition. _arXiv preprint [arxiv:1801.07455](https://arxiv.org/abs/1801.07455)._
-2. [[Semi-Supervised Classification with Graph Convolutional Networks]]
+2. [[Semi-Supervised Classification with Graph Convolutional Networks]].
+3. [[Graph Convolutional Network]].

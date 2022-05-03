@@ -1,5 +1,5 @@
 Created: 31-03-2022 00:53
-Status: #summary
+Status: #summary #todo
 Tags: [[Personal Development]] [[Time Management]]
 
 # Time and Self-Management

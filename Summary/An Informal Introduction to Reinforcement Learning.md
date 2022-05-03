@@ -1,5 +1,5 @@
 Created: 25-04-2022 13:05
-Status: #summary 
+Status: #summary #done
 Tags: [[Reinforcement Learning]] [[Machine Learning]]
 
 # An Informal Introduction to Reinforcement Learning

@@ -1,5 +1,5 @@
 Created: 15-04-2022 11:45
-Status: #summary 
+Status: #summary #todo
 Tags: [[Temporal Convolutional Network]] [[Freezing of Gait]] [[Graph Convolutional Network]] [[Machine Learning]] [[Action Segmentation]]
 
 # Automated Freezing of Gait Assessment with Marker-Based Motion Capture and Multi-Stage Spatial-Temporal Graph Convolutional Neural Networks

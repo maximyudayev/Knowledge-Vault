@@ -1,5 +1,5 @@
 Created: 29-03-2022 21:51
-Status: #summary
+Status: #summary #todo
 Tags: [[Memory Technologies]] [[ISSCC2022]]
 
 # HBM DRAM and 3D Stacked Memory

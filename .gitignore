@@ -1,22 +1,6 @@
-Media/HYC*
+# Ignore private notes
+Private
 
-Notes/Help\ Ukraine.md
-Notes/SST2022\ Pitch.md
-Notes/Y\ Combinator.md
-Notes/Complaint\ to\ Tokayev.md
-Notes/PayInMate Pitch.md
-Notes/Y Combinator Application 2022 - PayInMate.md
-Notes/2-minute PayInMate Pitch.md
-Notes/5-minute PayInMate Pitch Bottom-Up.md
-Notes/5-minute PayInMate Pitch Top-Down.md
-Notes/Ukraine KU Leuven Meeting Notes 28.04.2022.md
-Notes/PayInMate Meeting Notes 29.04.2022.md
-
-MOC/Hack\ Your\ Closet.md
-MOC/Volunteering.md
-
-Idea/PayInMate.md
-Idea/HYC*
-
-Summary/A\ Review\ of\ Modern\ Fashion\ Recommender\ Systems.md
-Summary/The\ Lean\ Startup\ -\ Eric\ Ries.md
+# Ignore draft notes
+#Drafts
+/*.md

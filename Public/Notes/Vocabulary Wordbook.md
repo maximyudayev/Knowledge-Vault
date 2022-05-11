@@ -5,7 +5,6 @@ Tags: [[PhD]]
 # Vocabulary Wordbook
 
 ^6fa46f
-
 - to extend the reach of
 - an increasing effort to
 - impedes further investigtion of

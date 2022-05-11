@@ -24,6 +24,9 @@ To prevent doing linear combination with 0 activations, falling outside of windo
 $T=1+(k-1)\sum\limits_{i=0}^{n}2^{i}=2^{n+1}-1$, for causal and
 $T=1$, for acausal networks.
 $n$ - depth of the TCN block.
+
+Each TCN layer performs a dilated convolution, activation, $1\times 1$ convolution and a residual connection, before feeding the output to the next layer.
+![[MS-TCN Multi-Stage Temporal Convolutional Network for Action Segmentation 1.png]]
 ## References
 1. [[Skeleton-Based Action Segmentation with Multi-Stage Spatial-Temporal Graph Convolutional Neural Networks]]
 2. [[MS-TCN Multi-Stage Temporal Convolutional Network for Action Segmentation]]

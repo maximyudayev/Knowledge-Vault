@@ -1,7 +1,9 @@
 Created: 17-04-2022 12:57
-Status: #summary #done
+Status: #summary #todo
 Tags: [[Graph Convolutional Network]] [[Machine Learning]] [[Action Segmentation]]
 
+# Remarks
+1. It is most likely that PyTorch implementations stream the full pre-recorded dataset through the network one layer at a time. This simplifies the implementation for researchers since no management of FIFOs is needed.
 # Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition
 - [[Graph Convolutional Network]] generalizes [[Convolutional Neural Network]] to arbitrary structure graphs. Modeling dynamic graphs still needs to be explored.
 - In spatial perspective, convolution is applied directly on the graph nodes and its neighbors; in spectral perspective, locality of convolution is considered in spectral analysis.
@@ -86,6 +88,16 @@ The GCN reuses the same weight matrix across all nodes in the layer, but the var
 Spatial partitioning shows the best results.
 ### In-depth Operator Analysis
 #### Concept
+A spatial temporal graph for the skeleton-based action segmentation can be thought of as a 3D tensor with length $\Gamma$ along the time axis, number of joints $N$ and number of features per joint $C$ along the other $2$ axis. This is because skeleton graph data is consistent and measurements across nodes come in the same order, frame after frame: each row of a resulting tensor corresponds to a single node across time.
+ST-GCN takes the frame at $t$, $\lfloor\Gamma/2\rfloor$ frames into the future and $\lfloor\Gamma/2\rfloor$ frames into the past: in realtime applications, this can be thought of as processing latency of $\lfloor\Gamma/2\rfloor$ cycles (in the units of the sampling frequency of the capture device/dataset).
+
+The drawing shows the tensor equivalent representation of the spatial-temporal graph.
+Highlighted nodes are the timeframe at time $t$ at which the output $\pmb{f}_{out,t}\in\Re^{N\times C}$ is produced.
+![[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition 5.png]]
+
+The concept of applying ST-GCN is identical to GCN, but it extends the node neighborhood to the temporal dimension as well. To update a node's features, its neighbors are independently convolved with the shared weight kernel and later summed together across the new channels.
+![[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition 6.png]]
+
 $\sum\limits_{j}\pmb{\hat{A}}_{j}\pmb{f}_{in}\pmb{W}_{j}$ can be thought of as, for each partition $j$, a $1\times 1$ 2D convolution of the input $\pmb{f}_{in}\in\Re^{N\times T\times C}$ with the weight matrix $\pmb{W}_{j}\in\Re^{1\times 1\times C\times C}$ to produce an intermediate buffer $\pmb{f}^{'}_{j}\in\Re^{N\times T\times C}$, where each slice of the tensor is reused $\Gamma$ times. 
 
 ![[Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition 1.png]]
@@ -118,6 +130,12 @@ Lastly, the partial results of each partition $j$ are summed and pushed into the
 Tadaa! No TCN needed, straight-forward implementation using standard differentiable tensor operators.
 
 The residual connections in ST-GCN layers 4 and 7 are fed through a $1\times 1$ 2D convolution to match the layer's output dimensions.
+### Experiments
+#### Kinetics
+Computer vision based. 400 human action classes. 300'000 videos of 10 seconds. Uses OpenPose pose estimator to estimate 2D locations of 18 joints from pictures, with a confidence metric for each.
+$T$ is set to 300.
+#### NTU-RGB+D
+60 human action classes. 56'000 videos. Uses Kinect with depth estimator to estimate 3D locations of 25 joints from pictures.
 ## References
 1. Yan, S., Xiong, Y., & Lin, D. (2018). Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition. _arXiv preprint [arxiv:1801.07455](https://arxiv.org/abs/1801.07455)._
 2. [[Semi-Supervised Classification with Graph Convolutional Networks]].

@@ -1,6 +1,6 @@
 Created: 28-04-2022 13:05
 Status: #summary #todo
-Tags: [[AI Accelerators]] [[RISC-V]] [[TinyML]]
+Tags: [[AI Accelerators]] [[RISC-V Spring Week 2022]] [[TinyML]]
 
 # State of Hardware and Software Ecosystem for Low-Power ML Applications on RISC-V
 ## Introduction
